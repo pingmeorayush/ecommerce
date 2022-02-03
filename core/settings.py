@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'account',
     'django_countries',
     'six',
+    'payment',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +144,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+STRIPE_ENDPOINT_SECRET = 'whsec_74163747d2e6759585fb9a233bf4ec756622cfc71e34c7dadc30b74447aa6b77'
+
+BASKET_SESSION_ID = 'skey'

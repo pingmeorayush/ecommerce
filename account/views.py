@@ -14,11 +14,14 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, UserEditForm
 from .models import UserBase
 from .token import account_activation_token
+from orders.views import user_orders
 
 def dashboard(request):
+    orders = user_orders(request)
+
     return render(request,'account/user/dashboard.html',{
         'section':'profile',
-        'orders':{}
+        'orders':orders
     })
 
 def account_register(request):
