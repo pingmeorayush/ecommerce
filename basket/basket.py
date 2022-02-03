@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from django.conf import settings
+
 
 from store.models import Product
 
@@ -14,10 +16,10 @@ class Basket():
         
         self.session = request.session
         
-        basket = self.session.get('skey')
+        basket = self.session.get(settings.BASKET_SESSION_ID)
         
         if 'skey' not in request.session:
-            basket = self.session['skey'] = {}
+            basket = self.session[settings.BASKET_SESSION_ID] = {}
         
         self.basket = basket
 
@@ -43,6 +45,10 @@ class Basket():
     def save(self):
         self.session.modified = True
     
+    def clear(self):
+        del self.session[settings.BASKET_SESSION_ID]
+        self.save()
+
     def delete(self,product_id):
         """Delete item from session data
 
@@ -94,4 +100,14 @@ class Basket():
         return sum(item['qty'] for item in self.basket.values())
 
     def get_total_price(self):
-        return sum(Decimal(item['price']) * int(item['qty']) for item in self.basket.values())
+
+        subtotal = sum(Decimal(item['price']) * int(item['qty']) for item in self.basket.values())
+
+        if subtotal == 0:
+            shipping = Decimal(0.00)
+        else:
+            shipping = Decimal(shipping)
+        
+        total = subtotal + Decimal(shipping)
+
+        return total 
