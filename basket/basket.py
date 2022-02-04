@@ -106,7 +106,7 @@ class Basket():
         if subtotal == 0:
             shipping = Decimal(0.00)
         else:
-            shipping = Decimal(shipping)
+            shipping = Decimal(11.50)
         
         total = subtotal + Decimal(shipping)
 
