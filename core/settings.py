@@ -148,3 +148,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 STRIPE_ENDPOINT_SECRET = 'whsec_74163747d2e6759585fb9a233bf4ec756622cfc71e34c7dadc30b74447aa6b77'
 
 BASKET_SESSION_ID = 'skey'
+
+# stripe listen --forward-to localhost:8000/payment/webhook/
+os.environ.setdefault('STRIPE_PUBLISHABLE_KEY','pk_test_51KPCdrSFWJdREBSByhsEaku0oQcbdffGy6kwN9dbD6K5Z9kVJcLkMbONa59GBTbi21MjAAFL20aPeXlyVHzuqTH000cQDq9wom')
+STRIPE_SECRET_KEY = 'sk_test_51KPCdrSFWJdREBSBcbkUw7rMwbIwbFVQieJuV2J5gDO9ncWGsmPXTfDTyz7tDUpu9n4ai2sfwV5vg5iHfLzPs4bG00f0mB5To2'

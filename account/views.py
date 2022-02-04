@@ -53,8 +53,8 @@ def account_register(request):
             # user.email_user(subject=subject, message=message)
 
             ur = "http://127.0.0.1:8000/account/activate/{}/{})/".format(uid,token)
-
-            return HttpResponse('registered succesfully and activation sent')
+            print(ur)
+            return render(request,'account/registration/register_email_confirm.html')
     else:
         registerForm = RegistrationForm()
     return render(request,'account/registration/register.html',{'form':registerForm})
@@ -82,7 +82,7 @@ def edit_details(request):
     else:
         user_form = UserEditForm(instance=request.user)
     
-    return render(request,'account/user/edit_details.html',{'user_form': user_form})
+    return render(request,'account/dashboard/edit_details.html',{'user_form': user_form})
 
 @login_required
 def delete_user(request):
