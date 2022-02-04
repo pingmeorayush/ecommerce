@@ -19,7 +19,7 @@ from orders.views import user_orders
 def dashboard(request):
     orders = user_orders(request)
 
-    return render(request,'account/user/dashboard.html',{
+    return render(request,'account/dashboard/dashboard.html',{
         'section':'profile',
         'orders':orders
     })
