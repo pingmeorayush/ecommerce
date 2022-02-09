@@ -5,7 +5,7 @@
 <div class="container">
     <div>
         {% if 'email' in request.get_full_path %}
-        <h3 class="mb-4">Password Reset Email Sent Successfully</h3>
+        <h3 class="mb-4">Password Reset Success</h3>
         <p>Check your email for instructions</p>
         {% endif%}
         {% if 'complete' in request.get_full_path %}
