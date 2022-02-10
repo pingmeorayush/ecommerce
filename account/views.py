@@ -2,18 +2,19 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.contrib import messages
 
 from orders.views import user_orders
 
 from .forms import RegistrationForm, UserEditForm, UserAddressForm
 from .models import Customer, Address
 from .tokens import account_activation_token
-
+from store.models import Product
 
 @login_required
 def dashboard(request):
@@ -39,7 +40,7 @@ def edit_details(request):
 
 @login_required
 def delete_user(request):
-    user = UserBase.objects.get(user_name=request.user)
+    user = Customer.objects.get(user_name=request.user)
     user.is_active = False
     user.save()
     logout(request)
@@ -77,7 +78,7 @@ def account_register(request):
 def account_activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = UserBase.objects.get(pk=uid)
+        user = Customer.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, user.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
@@ -132,3 +133,26 @@ def set_default(request, id):
     Address.objects.filter(customer=request.user, default=True).update(default=False)
     Address.objects.filter(pk=id, customer=request.user).update(default=True)
     return redirect("account:addresses")   
+
+@login_required
+def add_to_wishlist(request, id):
+    
+    product = get_object_or_404(Product, id=id)
+
+    if product.users_wishlist.filter(id=request.user.id).exists():
+        # product added to wish list already so remove it
+        product.users_wishlist.remove(request.user)
+
+        messages.success(request, "{} has been removed from your wishlist".format(product.title))
+    else:
+        product.users_wishlist.add(request.user)
+        
+        messages.success(request, "Added {} to your wishlist".format(product.title))
+
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+@login_required
+def wishlist(request):
+    products = Product.objects.filter(users_wishlist=request.user)
+    return render(request, "account/dashboard/user_wish_list.html",{"wishlist":products})
+
